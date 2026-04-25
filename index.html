@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MARQUISE — Web3 Community & Growth</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #05070F;
+  --bg2:     #080B16;
+  --bg3:     #0C1020;
+  --border:  #151C30;
+  --teal:    #00E5CC;
+  --purple:  #7C3AED;
+  --cyan:    #22D3EE;
+  --hot:     #F43F5E;
+  --text:    #E2E8F7;
+  --muted:   #5A6685;
+  --card:    #0A0E1A;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'DM Sans', sans-serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ── Cursor ── */
+.c-dot { position: fixed; width: 8px; height: 8px; background: var(--teal); border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); mix-blend-mode: screen; transition: transform .12s; }
+.c-ring { position: fixed; width: 32px; height: 32px; border: 1px solid rgba(0,229,204,0.5); border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%,-50%); transition: all .2s ease; }
+
+/* ── Scanlines overlay ── */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,229,204,0.012) 2px, rgba(0,229,204,0.012) 4px);
+  pointer-events: none; z-index: 1000; opacity: 0.6;
+}
+
+/* ── Nav ── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 1.1rem 3.5rem;
+  background: rgba(5,7,15,0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+.nav-logo {
+  font-family: 'Space Mono', monospace;
+  font-size: 1rem; font-weight: 700;
+  color: var(--teal);
+  letter-spacing: 0.06em;
+}
+.nav-logo span { color: var(--muted); }
+.nav-links { display: flex; gap: 2rem; }
+.nav-links a {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem; letter-spacing: 0.08em;
+  color: var(--muted); text-decoration: none;
+  transition: color .2s;
+}
+.nav-links a:hover { color: var(--teal); }
+.nav-cta {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.72rem; padding: 0.45rem 1.1rem;
+  border: 1px solid var(--teal);
+  color: var(--teal); text-decoration: none;
+  transition: all .2s;
+}
+.nav-cta:hover { background: var(--teal); color: var(--bg); }
+
+/* ── Hero ── */
+#hero {
+  min-height: 100vh;
+  display: flex; align-items: center;
+  padding: 8rem 3.5rem 4rem;
+  position: relative; overflow: hidden;
+}
+
+.hero-mesh {
+  position: absolute; inset: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 55% 60% at 70% 50%, rgba(0,229,204,0.07) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 40% at 20% 60%, rgba(124,58,237,0.09) 0%, transparent 60%),
+    radial-gradient(ellipse 30% 30% at 85% 15%, rgba(244,63,94,0.06) 0%, transparent 55%);
+}
+
+.hero-dots {
+  position: absolute; inset: 0; pointer-events: none;
+  background-image: radial-gradient(rgba(0,229,204,0.18) 1px, transparent 1px);
+  background-size: 32px 32px;
+  mask-image: radial-gradient(ellipse 70% 70% at 60% 50%, black 0%, transparent 80%);
+}
+
+.hero-content { position: relative; z-index: 2; max-width: 700px; }
+
+.hero-chip {
+  display: inline-flex; align-items: center; gap: 0.6rem;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem; letter-spacing: 0.12em;
+  color: var(--teal);
+  border: 1px solid rgba(0,229,204,0.25);
+  background: rgba(0,229,204,0.05);
+  padding: 0.35rem 0.9rem;
+  margin-bottom: 2rem;
+  animation: fadeUp .7s ease both;
+}
+.hero-chip::before { content: ''; width: 6px; height: 6px; background: var(--teal); border-radius: 50%; box-shadow: 0 0 8px var(--teal); animation: blink 1.5s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+.hero-name {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(4.5rem, 11vw, 9rem);
+  line-height: 0.88;
+  letter-spacing: -0.02em;
+  animation: fadeUp .7s .1s ease both;
+}
+.hero-name .line1 { color: var(--text); display: block; }
+.hero-name .line2 {
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(0,229,204,0.6);
+  display: block;
+}
+
+.hero-sub {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.8rem; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--muted); margin-top: 1.4rem;
+  animation: fadeUp .7s .2s ease both;
+}
+.hero-sub span { color: var(--teal); }
+
+.hero-desc {
+  font-size: 1rem; font-weight: 300; line-height: 1.85;
+  color: var(--muted); max-width: 480px; margin-top: 1.6rem;
+  animation: fadeUp .7s .3s ease both;
+}
+
+.hero-btns {
+  display: flex; gap: 1rem; margin-top: 2.4rem; flex-wrap: wrap;
+  animation: fadeUp .7s .4s ease both;
+}
+.btn-teal {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.8rem 1.8rem;
+  background: var(--teal); color: var(--bg);
+  font-family: 'Space Mono', monospace; font-size: 0.78rem;
+  font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+  text-decoration: none; border: none; cursor: none;
+  transition: all .2s;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+}
+.btn-teal:hover { background: #00ffdf; box-shadow: 0 0 24px rgba(0,229,204,0.4); }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 0.5rem;
+  padding: 0.8rem 1.8rem;
+  background: transparent; color: var(--text);
+  font-family: 'Space Mono', monospace; font-size: 0.78rem;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  text-decoration: none; border: 1px solid var(--border); cursor: none;
+  transition: all .2s;
+  clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+}
+.btn-ghost:hover { border-color: var(--teal); color: var(--teal); }
+
+.hero-counter {
+  position: absolute; right: 3.5rem; top: 50%; transform: translateY(-50%);
+  display: flex; flex-direction: column; gap: 2rem;
+  animation: fadeUp .7s .5s ease both;
+}
+.counter-item { text-align: right; }
+.counter-num {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: 2.8rem; line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--teal);
+}
+.counter-label { font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spacing: 0.12em; color: var(--muted); margin-top: 0.2rem; }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── Ticker ── */
+.ticker-wrap {
+  overflow: hidden; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  background: var(--bg2); padding: 0.7rem 0;
+}
+.ticker {
+  display: flex; gap: 3rem; width: max-content;
+  animation: ticker 22s linear infinite;
+}
+.ticker-item {
+  font-family: 'Space Mono', monospace; font-size: 0.72rem; letter-spacing: 0.12em;
+  color: var(--muted); white-space: nowrap; display: flex; align-items: center; gap: 0.6rem;
+}
+.ticker-item .dot { width: 5px; height: 5px; background: var(--teal); border-radius: 50%; flex-shrink: 0; }
+@keyframes ticker { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+
+/* ── Sections ── */
+section { padding: 6rem 3.5rem; position: relative; z-index: 2; }
+.container { max-width: 1080px; margin: 0 auto; }
+
+.s-tag {
+  font-family: 'Space Mono', monospace; font-size: 0.68rem;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--teal);
+  display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.5rem;
+}
+.s-tag::before { content: '//'; color: var(--muted); }
+
+.s-title {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: clamp(2.4rem, 5vw, 4rem); line-height: 1.05;
+  letter-spacing: -0.02em; margin-bottom: 3rem;
+}
+
+/* ── About ── */
+#about { background: var(--bg2); }
+.about-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 5rem; align-items: start; }
+
+.about-p { color: var(--muted); line-height: 1.9; font-size: 0.97rem; margin-bottom: 1rem; }
+.about-p strong { color: var(--text); font-weight: 500; }
+.about-p .hl { color: var(--teal); font-weight: 500; }
+
+.about-terminal {
+  background: var(--card);
+  border: 1px solid var(--border);
+  font-family: 'Space Mono', monospace; font-size: 0.78rem;
+  margin-top: 2rem;
+}
+.terminal-bar {
+  background: var(--bg3); padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; gap: 0.5rem;
+}
+.t-dot { width: 10px; height: 10px; border-radius: 50%; }
+.t-red { background: #FF5F57; } .t-yel { background: #FFBD2E; } .t-grn { background: #28CA41; }
+.terminal-body { padding: 1.2rem 1.4rem; line-height: 2.1; }
+.t-prompt { color: var(--teal); } .t-cmd { color: var(--text); } .t-val { color: #FFD166; } .t-muted { color: var(--muted); }
+
+.socials-grid { display: flex; flex-direction: column; gap: 0.8rem; }
+.social-row {
+  display: flex; align-items: center; gap: 1rem;
+  border: 1px solid var(--border); padding: 0.9rem 1.2rem;
+  background: var(--card);
+  text-decoration: none; color: var(--text);
+  transition: border-color .2s, transform .2s;
+}
+.social-row:hover { border-color: var(--teal); transform: translateX(4px); }
+.social-icon { font-size: 1.1rem; width: 1.6rem; text-align: center; }
+.social-platform { font-family: 'Space Mono', monospace; font-size: 0.62rem; letter-spacing: 0.1em; color: var(--muted); }
+.social-handle { font-family: 'Space Mono', monospace; font-size: 0.82rem; color: var(--text); }
+
+/* ── Projects ── */
+#projects { background: var(--bg); }
+.projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
+
+.proj-card {
+  background: var(--card); border: 1px solid var(--border);
+  padding: 2rem; position: relative; overflow: hidden;
+  transition: border-color .25s, transform .25s;
+  cursor: none;
+}
+.proj-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, var(--teal), var(--purple), transparent);
+  opacity: 0; transition: opacity .25s;
+}
+.proj-card:hover { border-color: rgba(0,229,204,0.3); transform: translateY(-4px); }
+.proj-card:hover::before { opacity: 1; }
+
+.proj-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+.proj-logo {
+  font-family: 'Syne', sans-serif; font-weight: 800;
+  font-size: 1.3rem; color: var(--text);
+}
+.proj-tag {
+  font-family: 'Space Mono', monospace; font-size: 0.62rem;
+  letter-spacing: 0.1em; padding: 0.2rem 0.6rem;
+  border: 1px solid var(--border); color: var(--muted);
+}
+.proj-sector { font-family: 'Space Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; color: var(--teal); margin-bottom: 0.6rem; }
+.proj-desc { font-size: 0.88rem; color: var(--muted); line-height: 1.75; margin-bottom: 1.2rem; }
+.proj-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.proj-chip {
+  font-family: 'Space Mono', monospace; font-size: 0.62rem;
+  padding: 0.2rem 0.6rem; border: 1px solid rgba(0,229,204,0.2);
+  color: rgba(0,229,204,0.7); background: rgba(0,229,204,0.04);
+}
+
+/* ── Skills ── */
+#skills { background: var(--bg2); }
+.skills-cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+
+.skill-block {
+  background: var(--card); border: 1px solid var(--border);
+  padding: 1.6rem; transition: border-color .2s;
+}
+.skill-block:hover { border-color: rgba(0,229,204,0.25); }
+.skill-block-title {
+  font-family: 'Space Mono', monospace; font-size: 0.68rem;
+  letter-spacing: 0.14em; text-transform: uppercase; color: var(--teal); margin-bottom: 1rem;
+  padding-bottom: 0.7rem; border-bottom: 1px solid var(--border);
+}
+.skill-item { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.6rem; }
+.skill-bar-wrap { flex: 1; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+.skill-bar { height: 100%; background: linear-gradient(90deg, var(--teal), var(--cyan)); border-radius: 2px; }
+.skill-name { font-size: 0.8rem; color: var(--muted); min-width: 100px; }
+
+/* ── Experience ── */
+#experience { background: var(--bg); }
+.exp-list { display: flex; flex-direction: column; gap: 1.2rem; }
+
+.exp-item {
+  display: grid; grid-template-columns: 180px 1fr;
+  gap: 2rem; align-items: start;
+  border-left: 1px solid var(--border);
+  padding-left: 2rem; position: relative;
+  opacity: 0; transform: translateY(16px);
+  transition: all .5s ease;
+}
+.exp-item.visible { opacity: 1; transform: translateY(0); }
+.exp-item::before {
+  content: '';
+  position: absolute; left: -5px; top: 6px;
+  width: 9px; height: 9px;
+  border: 1.5px solid var(--teal); border-radius: 50%;
+  background: var(--bg);
+}
+
+.exp-period {
+  font-family: 'Space Mono', monospace; font-size: 0.7rem;
+  color: var(--muted); letter-spacing: 0.06em; padding-top: 0.15rem;
+}
+
+.exp-body {}
+.exp-role { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 1.15rem; color: var(--text); margin-bottom: 0.2rem; }
+.exp-org { font-family: 'Space Mono', monospace; font-size: 0.75rem; color: var(--teal); margin-bottom: 0.8rem; }
+.exp-bullets { list-style: none; }
+.exp-bullets li {
+  font-size: 0.88rem; color: var(--muted); padding-left: 1rem; position: relative; margin-bottom: 0.4rem; line-height: 1.7;
+}
+.exp-bullets li::before { content: '›'; position: absolute; left: 0; color: var(--teal); font-size: 1rem; }
+
+/* ── Contact ── */
+#contact { background: var(--bg2); }
+.contact-wrap {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start;
+}
+.contact-p { font-size: 0.97rem; color: var(--muted); line-height: 1.9; margin-bottom: 2rem; }
+.contact-links { display: flex; flex-direction: column; gap: 0.8rem; }
+.contact-link {
+  display: flex; align-items: center; gap: 1rem;
+  border: 1px solid var(--border); padding: 1rem 1.4rem;
+  background: var(--card); text-decoration: none; color: var(--text);
+  transition: border-color .2s, transform .2s;
+}
+.contact-link:hover { border-color: var(--teal); transform: translateX(4px); }
+.c-icon { font-size: 1.1rem; }
+.c-label { font-family: 'Space Mono', monospace; font-size: 0.62rem; color: var(--muted); letter-spacing: 0.1em; }
+.c-val { font-family: 'Space Mono', monospace; font-size: 0.82rem; color: var(--text); }
+
+/* ── Footer ── */
+footer {
+  border-top: 1px solid var(--border); padding: 1.8rem 3.5rem;
+  display: flex; align-items: center; justify-content: space-between;
+  background: var(--bg);
+}
+.f-logo { font-family: 'Space Mono', monospace; font-size: 0.88rem; color: var(--teal); }
+.f-copy { font-family: 'Space Mono', monospace; font-size: 0.68rem; color: var(--muted); }
+
+/* ── Reveal ── */
+.reveal { opacity: 0; transform: translateY(18px); transition: all .55s ease; }
+.reveal.visible { opacity: 1; transform: translateY(0); }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  nav { padding: 1rem 1.4rem; }
+  .nav-links { display: none; }
+  section { padding: 4rem 1.4rem; }
+  #hero { padding: 7rem 1.4rem 4rem; }
+  .hero-counter { display: none; }
+  .about-grid, .projects-grid, .skills-cols, .contact-wrap { grid-template-columns: 1fr; }
+  .exp-item { grid-template-columns: 1fr; gap: 0.4rem; }
+  footer { flex-direction: column; gap: 0.5rem; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="c-dot" id="cDot"></div>
+<div class="c-ring" id="cRing"></div>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-logo">MARQUISE<span>.dev</span></div>
+  <div class="nav-links">
+    <a href="#about">About</a>
+    <a href="#projects">Projects</a>
+    <a href="#skills">Skills</a>
+    <a href="#experience">Experience</a>
+    <a href="#contact">Contact</a>
+  </div>
+  <a href="mailto:Deliege091@gmail.com" class="nav-cta">Hire Me →</a>
+</nav>
+
+<!-- Hero -->
+<section id="hero">
+  <div class="hero-mesh"></div>
+  <div class="hero-dots"></div>
+  <div class="hero-content">
+    <div class="hero-chip">Community Growth &amp; Operations Manager</div>
+    <h1 class="hero-name">
+      <span class="line1">MARQUISE</span>
+    </h1>
+    <p class="hero-sub">Web3 · DePIN · <span>Community &amp; Growth</span></p>
+    <p class="hero-desc">Building engaged, loyal communities at the intersection of decentralised technology and human connection. From protocol launches to ecosystem growth — I've done it at scale.</p>
+    <div class="hero-btns">
+      <a href="#projects" class="btn-teal">View My Work ↓</a>
+      <a href="#contact" class="btn-ghost">Let's Talk</a>
+    </div>
+  </div>
+  <div class="hero-counter">
+    <div class="counter-item">
+      <div class="counter-num">4+</div>
+      <div class="counter-label">Web3 Protocols</div>
+    </div>
+    <div class="counter-item">
+      <div class="counter-num">3+</div>
+      <div class="counter-label">Years in Web3</div>
+    </div>
+    <div class="counter-item">
+      <div class="counter-num">NG</div>
+      <div class="counter-label">Lagos, Nigeria</div>
+    </div>
+  </div>
+</section>
+
+<!-- Ticker -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <span class="ticker-item"><span class="dot"></span>PHALA NETWORK</span>
+    <span class="ticker-item"><span class="dot"></span>IO.NET</span>
+    <span class="ticker-item"><span class="dot"></span>HELIUM NETWORK</span>
+    <span class="ticker-item"><span class="dot"></span>KASPA</span>
+    <span class="ticker-item"><span class="dot"></span>SLATE OFFICIAL</span>
+    <span class="ticker-item"><span class="dot"></span>DEPIN</span>
+    <span class="ticker-item"><span class="dot"></span>SOCIALFI · STELLAR</span>
+    <span class="ticker-item"><span class="dot"></span>COMMUNITY GROWTH</span>
+    <span class="ticker-item"><span class="dot"></span>WEB3 OPERATIONS</span>
+    <span class="ticker-item"><span class="dot"></span>ECOSYSTEM DEVELOPMENT</span>
+    <span class="ticker-item"><span class="dot"></span>PHALA NETWORK</span>
+    <span class="ticker-item"><span class="dot"></span>IO.NET</span>
+    <span class="ticker-item"><span class="dot"></span>HELIUM NETWORK</span>
+    <span class="ticker-item"><span class="dot"></span>KASPA</span>
+    <span class="ticker-item"><span class="dot"></span>SLATE OFFICIAL</span>
+    <span class="ticker-item"><span class="dot"></span>DEPIN</span>
+    <span class="ticker-item"><span class="dot"></span>SOCIALFI · STELLAR</span>
+    <span class="ticker-item"><span class="dot"></span>COMMUNITY GROWTH</span>
+    <span class="ticker-item"><span class="dot"></span>WEB3 OPERATIONS</span>
+    <span class="ticker-item"><span class="dot"></span>ECOSYSTEM DEVELOPMENT</span>
+  </div>
+</div>
+
+<!-- About -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="reveal">
+        <div class="s-tag">About Me</div>
+        <h2 class="s-title">Roots in Engineering.<br/>Home in Web3.</h2>
+        <p class="about-p">I'm <strong>Moses Samuel Oluwagbemiga</strong> — known in Web3 circles as <span class="hl">Marquise</span>. A Chemical Engineering graduate with a COREN Practice Certificate, I made a deliberate pivot into decentralised technology and haven't looked back.</p>
+        <p class="about-p">Across <strong>Phala Network, IO.net, Helium Network, and Kaspa</strong>, I've led community growth strategies, onboarding campaigns, ambassador programmes, and day-to-day operations — turning cold audiences into active, invested ecosystems.</p>
+        <p class="about-p">My engineering background isn't a detour — it's my edge. I understand the <span class="hl">technical foundations</span> of the protocols I represent, which means I communicate authentically and build trust that lasts.</p>
+        <div class="about-terminal">
+          <div class="terminal-bar">
+            <div class="t-dot t-red"></div>
+            <div class="t-dot t-yel"></div>
+            <div class="t-dot t-grn"></div>
+          </div>
+          <div class="terminal-body">
+            <div><span class="t-prompt">$ </span><span class="t-cmd">whoami</span></div>
+            <div><span class="t-val">marquise</span> <span class="t-muted">// Community Growth & Ops Manager</span></div>
+            <div style="margin-top:.6rem"><span class="t-prompt">$ </span><span class="t-cmd">cat location.txt</span></div>
+            <div><span class="t-val">Lagos, Nigeria 🇳🇬</span></div>
+            <div style="margin-top:.6rem"><span class="t-prompt">$ </span><span class="t-cmd">cat specialisation.txt</span></div>
+            <div><span class="t-val">DePIN · Community · Growth · Ops</span></div>
+            <div style="margin-top:.6rem"><span class="t-prompt">$ </span><span class="t-cmd">status --hire</span></div>
+            <div><span class="t-val" style="color:#00E5CC">✓ Open to opportunities</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal" style="transition-delay:.15s">
+        <div class="s-tag" style="margin-bottom:1.2rem">Find Me</div>
+        <div class="socials-grid">
+          <a href="https://twitter.com/R3almarquis3" target="_blank" class="social-row">
+            <div class="social-icon">🐦</div>
+            <div><div class="social-platform">Twitter / X</div><div class="social-handle">@R3almarquis3</div></div>
+          </a>
+          <a href="https://linkedin.com/in/Moses-Mark" target="_blank" class="social-row">
+            <div class="social-icon">🔗</div>
+            <div><div class="social-platform">LinkedIn</div><div class="social-handle">linkedin.com/in/Moses-Mark</div></div>
+          </a>
+          <div class="social-row">
+            <div class="social-icon">💬</div>
+            <div><div class="social-platform">Discord</div><div class="social-handle">@marquise077</div></div>
+          </div>
+          <a href="https://t.me/marquise33" target="_blank" class="social-row">
+            <div class="social-icon">✈️</div>
+            <div><div class="social-platform">Telegram</div><div class="social-handle">marquise33</div></div>
+          </a>
+          <a href="https://github.com/marquise3310" target="_blank" class="social-row">
+            <div class="social-icon">💻</div>
+            <div><div class="social-platform">GitHub</div><div class="social-handle">marquise3310</div></div>
+          </a>
+          <a href="mailto:Deliege091@gmail.com" class="social-row">
+            <div class="social-icon">✉️</div>
+            <div><div class="social-platform">Email</div><div class="social-handle">Deliege091@gmail.com</div></div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Projects -->
+<section id="projects">
+  <div class="container">
+    <div class="s-tag">Protocols I've Worked With</div>
+    <h2 class="s-title">Web3 Projects</h2>
+    <div class="projects-grid">
+
+      <div class="proj-card reveal">
+        <div class="proj-header">
+          <div class="proj-logo">Phala Network</div>
+          <div class="proj-tag">Privacy · TEE</div>
+        </div>
+        <div class="proj-sector">Confidential Computing · Web3 Infrastructure</div>
+        <p class="proj-desc">Contributed to community growth and engagement for a leading privacy-preserving cloud computing protocol. Managed ambassador activations, content pipelines, and multi-channel moderation across Discord and Telegram communities.</p>
+        <div class="proj-chips">
+          <span class="proj-chip">Community Management</span>
+          <span class="proj-chip">Ambassador Programme</span>
+          <span class="proj-chip">Discord Moderation</span>
+          <span class="proj-chip">Content Strategy</span>
+        </div>
+      </div>
+
+      <div class="proj-card reveal" style="transition-delay:.1s">
+        <div class="proj-header">
+          <div class="proj-logo">IO.net</div>
+          <div class="proj-tag">DePIN · GPU</div>
+        </div>
+        <div class="proj-sector">Decentralised GPU Network · AI Infrastructure</div>
+        <p class="proj-desc">Supported growth operations for a DePIN protocol democratising GPU compute for AI workloads. Drove community onboarding, coordinated regional awareness campaigns, and facilitated node operator engagement.</p>
+        <div class="proj-chips">
+          <span class="proj-chip">Growth Operations</span>
+          <span class="proj-chip">Node Operator Engagement</span>
+          <span class="proj-chip">Regional Campaigns</span>
+          <span class="proj-chip">DePIN</span>
+        </div>
+      </div>
+
+      <div class="proj-card reveal" style="transition-delay:.05s">
+        <div class="proj-header">
+          <div class="proj-logo">Helium Network</div>
+          <div class="proj-tag">DePIN · IoT</div>
+        </div>
+        <div class="proj-sector">Decentralised Wireless Network · IoT</div>
+        <p class="proj-desc">Engaged with the Helium ecosystem supporting hotspot deployer communities and network expansion advocacy. Coordinated community calls, educational content, and operator support to accelerate network coverage growth.</p>
+        <div class="proj-chips">
+          <span class="proj-chip">IoT Community</span>
+          <span class="proj-chip">Education & Onboarding</span>
+          <span class="proj-chip">Operator Support</span>
+          <span class="proj-chip">Network Growth</span>
+        </div>
+      </div>
+
+      <div class="proj-card reveal" style="transition-delay:.15s">
+        <div class="proj-header">
+          <div class="proj-logo">Kaspa</div>
+          <div class="proj-tag">PoW · DAG</div>
+        </div>
+        <div class="proj-sector">Proof-of-Work Blockchain · GHOSTDAG Protocol</div>
+        <p class="proj-desc">Active contributor to the Kaspa community ecosystem — one of the fastest proof-of-work blockchains. Participated in awareness building, community moderation, and supporting grassroots adoption campaigns across platforms.</p>
+        <div class="proj-chips">
+          <span class="proj-chip">PoW Ecosystem</span>
+          <span class="proj-chip">Community Moderation</span>
+          <span class="proj-chip">Grassroots Adoption</span>
+          <span class="proj-chip">Awareness Campaigns</span>
+        </div>
+      </div>
+
+      <div class="proj-card reveal" style="transition-delay:.2s; border-color: rgba(124,58,237,0.25);">
+        <div class="proj-header">
+          <div class="proj-logo" style="background: linear-gradient(90deg, var(--teal), var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">Slate Official</div>
+          <div class="proj-tag">SocialFi · Stellar</div>
+        </div>
+        <div class="proj-sector">SocialFi Ecosystem · Stellar Blockchain · @cassatorcorp</div>
+        <p class="proj-desc">Led African regional growth for a SocialFi protocol on the Stellar blockchain. Built community presence from zero, recruited continent-wide ambassadors, and made the SocialFi narrative resonate with African Web3 audiences.</p>
+        <div class="proj-chips">
+          <span class="proj-chip">Regional Growth</span>
+          <span class="proj-chip">Africa Expansion</span>
+          <span class="proj-chip">SocialFi</span>
+          <span class="proj-chip">Stellar Blockchain</span>
+          <span class="proj-chip">Ambassador Network</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Skills -->
+<section id="skills">
+  <div class="container">
+    <div class="s-tag">What I Bring</div>
+    <h2 class="s-title">Core Skills</h2>
+    <div class="skills-cols">
+      <div class="skill-block reveal">
+        <div class="skill-block-title">Community</div>
+        <div class="skill-item"><span class="skill-name">Discord Mgmt</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:95%"></div></div></div>
+        <div class="skill-item"><span class="skill-name">Telegram Ops</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:92%"></div></div></div>
+        <div class="skill-item"><span class="skill-name">Moderation</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:90%"></div></div></div>
+        <div class="skill-item"><span class="skill-name">Ambassador Prog.</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:85%"></div></div></div>
+      </div>
+      <div class="skill-block reveal" style="transition-delay:.1s">
+        <div class="skill-block-title">Growth & Ops</div>
+        <div class="skill-item"><span class="skill-name">Growth Strategy</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:88%"></div></div></div>
+        <div class="skill-item"><span class="skill-name">Onboarding Design</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:85%"></div></div></div>
+        <div class="skill-item"><span class="skill-name">Campaign Mgmt</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:87%"></div></div></div>
+        <div class="skill-item"><span class="skill-name">Event Coordination</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:80%"></div></div></div>
+      </div>
+      <div class="skill-block reveal" style="transition-delay:.2s">
+        <div class="skill-block-title">Web3 Knowledge</div>
+        <div class="skill-item"><span class="skill-name">DePIN Protocols</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:90%"></div></div></div>
+        <div class="skill-item"><span class="skill-name">Tokenomics</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:78%"></div></div></div>
+        <div class="skill-item"><span class="skill-name">L1/L2 Ecosystems</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:82%"></div></div></div>
+        <div class="skill-item"><span class="skill-name">DAO Governance</span><div class="skill-bar-wrap"><div class="skill-bar" style="width:75%"></div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Experience -->
+<section id="experience">
+  <div class="container">
+    <div class="s-tag">Work History</div>
+    <h2 class="s-title">Experience</h2>
+    <div class="exp-list">
+
+      <div class="exp-item">
+        <div class="exp-period">2022 – Present</div>
+        <div class="exp-body">
+          <div class="exp-role">Community Growth & Operations Manager</div>
+          <div class="exp-org">Phala Network · IO.net · Helium Network · Kaspa</div>
+          <ul class="exp-bullets">
+            <li>Led end-to-end community management across multiple high-profile Web3 protocols spanning DePIN, AI compute, and privacy infrastructure sectors.</li>
+            <li>Built and scaled ambassador programmes driving organic community growth and regional market penetration across Africa and globally.</li>
+            <li>Managed Discord and Telegram communities with thousands of members — implementing moderation frameworks, engagement campaigns, and onboarding flows.</li>
+            <li>Coordinated ecosystem growth operations including AMA sessions, community calls, content calendars, and multi-channel social campaigns.</li>
+            <li>Served as a bridge between technical teams and the broader community, translating complex protocol mechanics into accessible narratives.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-period">2024 – Present</div>
+        <div class="exp-body">
+          <div class="exp-role">Regional Growth Manager — Africa</div>
+          <div class="exp-org">Slate Official <span style="color:var(--muted)">(@cassatorcorp)</span> · SocialFi · Stellar Blockchain</div>
+          <ul class="exp-bullets">
+            <li>Spearheaded the African community expansion for Slate Official — a SocialFi ecosystem built on the Stellar blockchain — establishing the brand's presence across key African markets from the ground up.</li>
+            <li>Designed and executed regional onboarding campaigns that converted cold audiences into active, vocal community members across Twitter/X, Discord, and Telegram.</li>
+            <li>Recruited and managed a network of regional ambassadors across multiple African countries, creating a decentralised grassroots growth engine that amplified reach without paid acquisition.</li>
+            <li>Bridged cultural and language nuances to make the SocialFi narrative resonate authentically with African Web3 audiences — adapting global messaging for local relevance.</li>
+            <li>Coordinated AMAs, Twitter Spaces, and regional community events to drive awareness, trust, and protocol adoption across the continent.</li>
+            <li>Collaborated directly with core team at @cassatorcorp to align regional growth KPIs with global product and go-to-market strategy.</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-wrap">
+      <div class="reveal">
+        <div class="s-tag">Get In Touch</div>
+        <h2 class="s-title">Let's Build<br/>Something.</h2>
+        <p class="contact-p">Looking for a community manager who can ship results, not just metrics? Whether it's a protocol launch, growth sprint, or long-term operations role — let's talk.</p>
+        <a href="mailto:Deliege091@gmail.com" class="btn-teal">Send a Message →</a>
+      </div>
+      <div class="contact-links reveal" style="transition-delay:.15s">
+        <a href="mailto:Deliege091@gmail.com" class="contact-link">
+          <div class="c-icon">✉️</div>
+          <div><div class="c-label">Email</div><div class="c-val">Deliege091@gmail.com</div></div>
+        </a>
+        <a href="https://twitter.com/R3almarquis3" target="_blank" class="contact-link">
+          <div class="c-icon">🐦</div>
+          <div><div class="c-label">Twitter / X</div><div class="c-val">@R3almarquis3</div></div>
+        </a>
+        <a href="https://linkedin.com/in/Moses-Mark" target="_blank" class="contact-link">
+          <div class="c-icon">🔗</div>
+          <div><div class="c-label">LinkedIn</div><div class="c-val">linkedin.com/in/Moses-Mark</div></div>
+        </a>
+        <div class="contact-link">
+          <div class="c-icon">💬</div>
+          <div><div class="c-label">Discord</div><div class="c-val">@marquise077</div></div>
+        </div>
+        <a href="https://t.me/marquise33" target="_blank" class="contact-link">
+          <div class="c-icon">✈️</div>
+          <div><div class="c-label">Telegram</div><div class="c-val">marquise33</div></div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="f-logo">MARQUISE</div>
+  <div class="f-copy">© 2025 · Lagos, Nigeria · Web3 Community & Growth</div>
+</footer>
+
+<script>
+  // ── Cursor ────────────────────────────────────────────────
+  const dot = document.getElementById('cDot');
+  const ring = document.getElementById('cRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    dot.style.left = mx + 'px'; dot.style.top = my + 'px';
+  });
+
+  (function animRing() {
+    rx += (mx - rx) * 0.13; ry += (my - ry) * 0.13;
+    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  })();
+
+  document.querySelectorAll('a, button, .proj-card, .skill-block, .social-row').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      dot.style.transform = 'translate(-50%,-50%) scale(2.5)';
+      ring.style.transform = 'translate(-50%,-50%) scale(1.6)';
+      ring.style.borderColor = 'rgba(0,229,204,0.9)';
+    });
+    el.addEventListener('mouseleave', () => {
+      dot.style.transform = 'translate(-50%,-50%) scale(1)';
+      ring.style.transform = 'translate(-50%,-50%) scale(1)';
+      ring.style.borderColor = 'rgba(0,229,204,0.5)';
+    });
+  });
+
+  // ── Scroll Reveal ─────────────────────────────────────────
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal, .exp-item').forEach(el => obs.observe(el));
+</script>
+</body>
+</html>
